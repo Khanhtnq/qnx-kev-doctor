@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "qnx-kev-doctor",
+          "version": "1.0.0",
+          "informationUri": "https://github.com/Khanhtnq/qnx8_kev_doctor",
+          "rules": [
+            {
+              "id": "QNX-SRR-001",
+              "name": "IpcDeadlockCycle",
+              "shortDescription": {
+                "text": "Circular dependency detected in QNX Send-Receive-Reply IPC wait graph."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "QNX-PRIO-002",
+              "name": "UnboundedPriorityInversion",
+              "shortDescription": {
+                "text": "High-priority real-time client blocked on server without priority inheritance."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "QNX-APS-003",
+              "name": "ApsCriticalBudgetOverrun",
+              "shortDescription": {
+                "text": "Adaptive Partitioning Scheduler critical time overrun detected."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "QNX-SRR-001",
+          "level": "error",
+          "message": {
+            "text": "Deadlock Cycle #1: Tarjan SCC detected circular IPC wait-for dependency between 4 threads: PID 2002 TID 1 -> PID 2001 TID 1 -> PID 1001 TID 1 -> PID 3001 TID 1 holding/waiting on channels [88, 89, 90, 91] (Channels: [88, 89, 90, 91])"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target_qnx8/srr_resmgr_demo.cpp"
+                },
+                "region": {
+                  "startLine": 42
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "QNX-PRIO-002",
+          "level": "warning",
+          "message": {
+            "text": "Priority Inversion #1: Client PID 1001 (Prio 63) blocked on Server PID 2001 (Prio 10) on Chid 88. Root Cause: Channel 88 missing Priority Inheritance! High-prio RT client (prio 63) blocked while server runs at background prio 10. Likely caused by _NTO_CHF_FIXED_PRIORITY flag or non-PI dispatch loop."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target_qnx8/srr_resmgr_demo.cpp"
+                },
+                "region": {
+                  "startLine": 88
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "QNX-APS-003",
+          "level": "error",
+          "message": {
+            "text": "APS Anomaly #1: APS Critical Time Overrun: Partition Infotainment_Media used 72ms, exceeding permitted 50ms critical budget! Potential timing violation."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target_qnx8/run_qnx8_qemu.sh"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "QNX-APS-003",
+          "level": "warning",
+          "message": {
+            "text": "APS Anomaly #2: APS Partition Overrun: Partition Infotainment_Media exceeded nominal 20% CPU budget under load (Usage: 38%)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target_qnx8/run_qnx8_qemu.sh"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

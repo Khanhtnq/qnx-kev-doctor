@@ -1,0 +1,31 @@
+[package]
+name = "qnx-kev-doctor"
+version = "1.0.0"
+edition = "2021"
+authors = ["Khanhtnq <218711032+Khanhtnq@users.noreply.github.com>"]
+description = "Deterministic QNX Neutrino 8.0 Microkernel Trace (.kev) IPC Deadlock, Priority Inversion & Adaptive Partitioning Diagnostic Analyzer"
+license = "MIT"
+repository = "https://github.com/Khanhtnq/qnx8_kev_doctor"
+keywords = ["qnx", "microkernel", "tracelogger", "deadlock", "iso26262"]
+categories = ["development-tools::profiling", "embedded"]
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+byteorder = "1.5"
+petgraph = "0.6"
+hdrhistogram = "7.5"
+colored = "2.1"
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+tempfile = "3.10"
+
+[[bin]]
+name = "qnx-kev-doctor"
+path = "src/main.rs"
+
+[lib]
+name = "qnx_kev_doctor"
+path = "src/lib.rs"
