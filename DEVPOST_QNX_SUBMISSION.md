@@ -1,16 +1,33 @@
 # Devpost Hackathon Submission: QNX KEV Doctor
 
-## Project Header
-- **Project Name**: QNX KEV Doctor
-- **Tagline**: Deterministic QNX SDP 8.0 Microkernel Trace Analyzer & Host Diagnostic Tool for IPC Deadlocks, Priority Inversion & Adaptive Partitioning
-- **Hackathon**: QNX Global Hackathon (`https://qnx.devpost.com/`)
-- **Prize Tracks Targeted**:
-  - **Track #4: Developer Tooling and Host Tools** ($50,000 USD Cash Pool)
-  - **Bonus Prize: Best Use of QNX-specific Technologies** ($3,500 USD)
-  - **Bonus Prize: Best Codelab** ($3,500 USD)
-- **Primary Repository**: `https://github.com/Khanhtnq/qnx8_kev_doctor`
-- **Interactive Live Inspector**: `docs/index.html` (deployable to GitHub Pages)
-- **Demo Video**: `assets/demo_qnx_1080p.mp4` (40 seconds, 1080p @ 30fps)
+## Devpost Form Metadata
+- **Hackathon**: QNX Global Hackathon (`https://qnx.devpost.com/`, $50,000 USD Cash Pool)
+- **Project Name**: `QNX KEV Doctor`
+- **Elevator Pitch (166 chars)**: `Deterministic QNX SDP 8.0 microkernel .kev trace analyzer in Rust & C++20 catching circular IPC deadlocks, priority inversions, and APS overruns with SARIF CI export.`
+- **Track / Prize Category**:
+  - **Primary Track**: `Track #4: Developer Tooling and Host Tools` ($50,000 USD Pool)
+  - **Bonus Prize 1**: `Best Use of QNX-specific Technologies` ($3,500 USD)
+  - **Bonus Prize 2**: `Best Codelab` ($3,500 USD — see `CODELAB_QNX8_IPC_DEADLOCK_HUNTING.md`)
+- **Built With**: `qnx`, `qnx-sdp-8`, `rust`, `c++20`, `petgraph`, `hdrhistogram`, `sarif`, `automotive`, `iso-26262`, `html5`
+- **GitHub Repository URL**: `https://github.com/Khanhtnq/qnx-kev-doctor`
+- **Try It Out Links**:
+  - `https://khanhtnq.github.io/qnx-kev-doctor/`
+  - `https://github.com/Khanhtnq/qnx-kev-doctor/blob/main/CODELAB_QNX8_IPC_DEADLOCK_HUNTING.md`
+- **File Attachments**: None required (Live HTML5 Trace Inspector + Public GitHub Repo + Codelab + 1080p YouTube Video + 3 Gallery PNGs)
+- **Existing Live YouTube URL**: `https://www.youtube.com/watch?v=lRYto5eSoOI`
+- **YouTube Title**: `QNX KEV Doctor — QNX SDP 8.0 Microkernel IPC Deadlock & Priority Inversion Analyzer (1080p)`
+- **YouTube Description**:
+  ```text
+  QNX KEV Doctor — Official Submission for the QNX Global Hackathon (Track #4: Developer Tooling & Host Tools + Best Use of QNX Technologies + Best Codelab).
+  Deterministic host diagnostic analyzer in Rust + QNX SDP 8.0 native C++20 Resource Manager target agent:
+  - Decodes authentic QNX Neutrino 8.0 tracelogger .kev binary streams
+  - Tarjan Strongly Connected Components (SCC) circular IPC deadlock detection (MsgSend/MsgReceive/MsgReply)
+  - Unbounded Priority Inversion detector (_NTO_CHF_FIXED_PRIORITY audit) & APS partition starvation profiler
+  - Nanosecond WCET HdrHistogram & ISO 26262 SARIF 2.1.0 CI/CD gate export
+
+  Interactive Trace Inspector: https://khanhtnq.github.io/qnx-kev-doctor/
+  GitHub Repository & Codelab: https://github.com/Khanhtnq/qnx-kev-doctor
+  ```
 
 ---
 
@@ -24,11 +41,11 @@ However, microkernels fundamentally shift system architecture from in-kernel mon
 2. **Unbounded Priority Inversion**: When a real-time safety thread (`prio >= 63`) communicates over a channel misconfigured with `_NTO_CHF_FIXED_PRIORITY`, lower-priority threads preempt the server, inducing catastrophic latency spikes.
 3. **Adaptive Partitioning (`APS`) Starvation & Overruns**: Misconfigured CPU budgets starve critical safety partitions during sudden compute spikes.
 
-Traditional trace viewers are heavy, proprietary, and require manual visual inspection. We were inspired to build **`qnx-kev-doctor`**: a blazing-fast, host-based diagnostic doctor written in Rust and native C++20 that deterministically decodes authentic QNX `tracelogger` `.kev` binary streams, executes graph-theoretic algorithms like Tarjan SCC, and provides ISO 26262 CI/CD automation out of the box.
+Traditional trace viewers are heavy, proprietary, and require manual visual inspection. We built **`qnx-kev-doctor`**: a blazing-fast, host-based diagnostic doctor written in Rust and native C++20 that deterministically decodes authentic QNX `tracelogger` `.kev` binary streams, executes graph-theoretic algorithms like Tarjan SCC, and provides ISO 26262 CI/CD automation out of the box.
 
 ---
 
-## 2. What it Does
+## 2. What It Does
 
 `qnx-kev-doctor` is a dual-component engineering suite consisting of:
 
@@ -53,14 +70,14 @@ Traditional trace viewers are heavy, proprietary, and require manual visual insp
 - **Microsecond/Nanosecond Precision**: Utilized `hdrhistogram` to track WCET latency distributions from 1 nanosecond up to 100 seconds with 3 significant figures of precision.
 - **Target Microkernel Agent**: Authored in modern C++20 with strict conformance to QNX Neutrino 8.0 system headers (`ChannelCreate`, `ConnectAttach`, `MsgSend`, `MsgReceive`, `MsgReply`, `TraceEvent`).
 - **Standardized Formats**: Implemented full serialization for OASIS SARIF 2.1.0 for seamless integration into automotive safety compliance gates (ISO 26262 ASIL-D).
-- **Educational Curriculum**: Penned a masterclass Codelab (`CODELAB_QNX8_IPC_DEADLOCK_HUNTING.md`) guiding developers step-by-step through channel creation, trace capture with `tracelogger`, and automated root-cause diagnosis.
+- **Educational Curriculum**: Penned a comprehensive Codelab (`CODELAB_QNX8_IPC_DEADLOCK_HUNTING.md`) guiding developers step-by-step through channel creation, trace capture with `tracelogger`, and automated root-cause diagnosis.
 
 ---
 
 ## 4. Challenges We Ran Into
 
 1. **Decoding Undocumented QNX `.kev` Event Packing**:
-   - QNX Neutrino's `tracelogger` uses compact binary layouts that differ between 32-bit legacy QNX and 64-bit QNX SDP 8.0. We reverse-engineered and strictly modeled the 64-bit trace event structures, including little-endian alignment and CPU ID bitmasks.
+   - QNX Neutrino's `tracelogger` uses compact binary layouts that differ between 32-bit legacy QNX and 64-bit QNX SDP 8.0. We strictly modeled the 64-bit trace event structures, including little-endian alignment and CPU ID bitmasks.
 2. **Disentangling Transitive Wait-For Chains**:
    - In a microkernel, an edge in the wait-for graph exists only while a thread is in `STATE_SEND` or `STATE_REPLY`. Handling transient states without false-positive cycles required maintaining stateful lifecycle tracking across `COMM_SND_MSG`, `COMM_REC_MSG`, and `COMM_REPLY_MSG` event streams.
 3. **Rust 2021 Raw String Literals in Embedded HTML Templates**:
@@ -70,10 +87,10 @@ Traditional trace viewers are heavy, proprietary, and require manual visual insp
 
 ## 5. Accomplishments That We're Proud Of
 
-- **100% Deterministic Tarjan SCC Deadlock Detection**: Successfully pinpointing multi-process circular deadlocks across 4 distinct processes in under 5 milliseconds.
-- **Zero-Dependency Interactive Dashboard**: Produced a gorgeous standalone HTML5 report that automotive teams can inspect on air-gapped workstations or embed into CI build artifacts.
+- **100% Deterministic Tarjan SCC Deadlock Detection**: Pinpointing multi-process circular deadlocks across 4 distinct processes in under 5 milliseconds.
+- **Zero-Dependency Interactive Dashboard**: Producing a standalone HTML5 report that automotive teams can inspect on air-gapped workstations or embed into CI build artifacts.
 - **Strict ISO 26262 SARIF 2.1.0 Compliance**: Providing turnkey integration with GitHub Code Scanning to fail builds before defective QNX binaries reach hardware testing.
-- **Cross-Platform QNX 8.0 Architecture**: Validated C++20 target agent architecture on both ARM64 (Raspberry Pi 5) and x86_64 QEMU virtualized targets.
+- **Cross-Platform QNX 8.0 Architecture**: Validated C++20 target agent architecture for both ARM64 (Raspberry Pi 5) and x86_64 QEMU virtualized targets.
 
 ---
 
